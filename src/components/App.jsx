@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import base from '../base';
+import MovieList from './MovieList';
+import SearchContent from './SearchContent';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends Component {
     state = {
@@ -8,8 +11,10 @@ class App extends Component {
     };
 
     getMovieData(search, page) {
-        const searchValue = search.movieSearch.value;
+        const searchValue = search;
         const listMovies = {...this.state.listMovies };
+
+        console.log(searchValue);
 
         axios.get('http://www.omdbapi.com/', {
             params: {
@@ -17,7 +22,6 @@ class App extends Component {
                 page: page
             }
         }).then(function(response) {
-            console.log(response.data.totalResults);
             response.data.Search.map((obj) => {
                 listMovies[obj.imdbID] = {
                     name: obj.Title,
@@ -44,12 +48,27 @@ class App extends Component {
     }
 
     render() {
-        return (
-            <div>
-                <input type="text" ref="movieSearch"></input>
-                <button onClick={this.getMovieData.bind(this, this.refs, 2)}>Enviar</button>
-            </div>
-        );
+        if (Object.keys(this.state.listMovies).length > 0) {
+            let listMovies = this.state.listMovies;
+
+            return (
+                <MuiThemeProvider>
+                    <div>                
+                        <SearchContent submitSearch={this.getMovieData.bind(this)} />
+                        <MovieList list={listMovies} />
+                    </div>
+                </MuiThemeProvider>
+            );
+        }
+        else {
+            return (
+                <MuiThemeProvider>
+                    <div>
+                        <SearchContent submitSearch={this.getMovieData.bind(this)} />              
+                    </div>
+                </MuiThemeProvider>
+            );
+        }
     }
 }
 
