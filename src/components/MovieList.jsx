@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import '../styles/MovieList.scss';
 import {GridList, GridTile} from 'material-ui/GridList';
 import Subheader from 'material-ui/Subheader';
 
@@ -18,8 +17,6 @@ const styles = {
 
 class MovieList extends Component {
   render() {
-    console.log(this.props.list);
-
     return (
       <div styles={styles.root}>
         <GridList cellHeight={250} styles={styles.gridList} cols={5}>
